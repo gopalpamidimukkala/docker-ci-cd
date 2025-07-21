@@ -38,9 +38,12 @@ jobs:
                 key: ${{ secrets.PRIVATE_SSH_KEY_AZURE }}
                 port: 22
                 script: |
-                  bash -c "
-                    docker stop ws || true
-                    docker rm ws || true
-                    docker pull 10xdevss/docker-ci-cd-ws:${{ github.sha }}
-                    docker run -d --name ws -p 8081:8081 -e DATABASE_URL=${{ secrets.DATABASE_URL }} 10xdevss/docker-ci-cd-ws:${{ github.sha }}
-                  "
+                  docker stop ws || true
+                  docker rm ws || true
+                  docker pull 10xdevss/docker-ci-cd-ws:${{ github.sha }}
+                  docker run -d \
+                    --name ws \
+                    -p 8081:8081 \
+                    -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
+                    10xdevss/docker-ci-cd-ws:${{ github.sha }}
+                  
