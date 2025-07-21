@@ -36,7 +36,9 @@ jobs:
               key: ${{ secrets.PRIVATE_SSH_KEY_AZURE }}
               port: 22
               script: |
-                docker stop backend || true
-                docker rm backend || true
-                docker pull 10xdevss/docker-ci-cd-backend:${{ github.sha }}
-                docker run -d --name backend -p 8080:8080 -e DATABASE_URL=${{ secrets.DATABASE_URL }} 10xdevss/docker-ci-cd-backend:${{ github.sha }}
+                bash -c "
+                   docker stop backend || true
+                   docker rm backend || true
+                   docker pull 10xdevss/docker-ci-cd-backend:${{ github.sha }}
+                   docker run -d --name backend -p 8080:8080 -e DATABASE_URL=${{ secrets.DATABASE_URL }} 10xdevss/docker-ci-cd-backend:${{ github.sha }}
+                "
