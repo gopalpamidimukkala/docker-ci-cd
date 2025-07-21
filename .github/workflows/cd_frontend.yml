@@ -30,6 +30,7 @@ jobs:
     deploy:
         name: Push to Azure Server
         runs-on: ubuntu-latest
+        needs: build
 
         steps:
           - name: ssh in to azure and deploy
