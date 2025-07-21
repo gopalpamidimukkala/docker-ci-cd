@@ -44,9 +44,6 @@ jobs:
                 docker stop web || true
                 docker rm web || true
                 docker pull 10xdevss/docker-ci-cd-web:${{ github.sha }}
-                docker run -d \
-                  --name web \
-                  -p 3000:3000 \
-                  -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
-                  10xdevss/docker-ci-cd-web:${{ github.sha }}
+                docker run -d --name web -p 3000:3000 -e DATABASE_URL=${{ secrets.DATABASE_URL }} 10xdevss/docker-ci-cd-web:${{ github.sha }}
+
 
