@@ -22,6 +22,26 @@ jobs:
               with:
                   context: .
                   file: ./docker/Dockerfile.web
+                  build-args: |
+                    DATABASE_URL: ${{ secrets.DATABASE_URL }}
                   push: true
                   tags: 10xdevss/docker-ci-cd-web:${{ github.sha }}
+
+    deploy:
+        name: Push to Azure Server
+        runs-on: ubuntu-latest
+
+        steps:
+          - name: ssh in to azure and deploy
+            uses: appleboy/ssh-action@v1.2.0
+            with:
+              host: 74.225.249.186
+              username: azureuser
+              key: ${{ secrets.PRIVATE_SSH_KEY_AZURE }}
+              port: 22
+              script: |
+                    docker stop web || true
+                    docker rm web || true
+                    docker pull 10xdevss/docker-ci-cd-web:${{ github.sha }}
+                    docker run -d --name web -p 3000:3000 10xdevss/docker-ci-cd-web:${{ github.sha }}
 

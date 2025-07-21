@@ -22,3 +22,19 @@ jobs:
                 file: ./docker/Dockerfile.httpbackend
                 push: true
                 tags: 10xdevss/docker-ci-cd-backend:${{ github.sha }}
+    deploy:
+        name: Push to Azure Server
+        runs-on: ubuntu-latest
+        steps:
+          - name: ssh in to azure and deploy
+            uses: appleboy/ssh-action@v1.2.0
+            with:
+              host: 74.225.249.186
+              username: azureuser
+              key: ${{ secrets.PRIVATE_SSH_KEY_AZURE }}
+              port: 22
+              script: |
+                docker stop backend || true
+                docker rm backend || true
+                docker pull 10xdevss/docker-ci-cd-backend:${{ github.sha }}
+                docker run -d --name backend -p 8080:8080 10xdevss/docker-ci-cd-backend:${{ github.sha }}

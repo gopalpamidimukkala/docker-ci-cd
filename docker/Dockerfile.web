@@ -1,11 +1,12 @@
 FROM oven/bun:1
 
+ARG DATABASE_URL
 # Install OpenSSL
 RUN apt-get update && apt-get install -y openssl
 
 WORKDIR /usr/src/app
 
-ARG DATABASE_URL
+
 
 COPY ./packages ./packages
 COPY ./bun.lock ./bun.lock

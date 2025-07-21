@@ -23,3 +23,21 @@ jobs:
                   file: ./docker/Dockerfile.wsbackend
                   push: true
                   tags: 10xdevss/docker-ci-cd-ws:${{ github.sha }}
+    
+    deploy:
+        name: Push to Azure Server
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: ssh in to azure and deploy
+              uses: appleboy/ssh-action@v1.2.0
+              with:
+                host: 74.225.249.186
+                username: azureuser
+                key: ${{ secrets.PRIVATE_SSH_KEY_AZURE }}
+                port: 22
+                script: |
+                    docker stop ws || true
+                    docker rm ws || true
+                    docker pull 10xdevss/docker-ci-cd-ws:${{ github.sha }}
+                    docker run -d --name ws -p 8081:8081 10xdevss/docker-ci-cd-ws:${{ github.sha }}
