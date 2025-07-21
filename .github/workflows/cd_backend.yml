@@ -40,4 +40,6 @@ jobs:
             docker stop backend || true
             docker rm backend || true
             docker run -d --name backend -p 8080:8080 -e DATABASE_URL=${{ secrets.DATABASE_URL }} 10xdevss/docker-ci-cd-backend:${{ github.sha }}
-
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          GITHUB_SHA: ${{ github.sha }}
