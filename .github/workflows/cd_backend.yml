@@ -1,0 +1,24 @@
+name: CONTINUOUS DEPLOYMENT PROD (HTTP BACKEND)
+
+on:
+    push:
+        branches: [ main ]
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            
+            - name: DOCKER LOGIN
+              uses: docker/login-action@v2
+              with:
+                username: ${{ secrets.DOCKERHUB_USERNAME }}
+                password: ${{ secrets.DOCKERHUB_TOKEN }}
+                    
+            - name: Build and push
+              uses: docker/build-push-action@v4
+              with:
+                context: .
+                file: ./docker/Dockerfile.httpbackend
+                push: true
+                tags: 10xdevss/docker-ci-cd-backend:${{ github.sha }}

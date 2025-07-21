@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  httpbackend:
+    build: 
+      context: .
+      dockerfile: docker/Dockerfile.httpbackend
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=postgresql://postgres:mysecretpassword@localhost:5432/postgres
+    depends_on:
+      - postgres
+  web:
+    build: 
+      context: .
+      dockerfile: docker/Dockerfile.web
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:mysecretpassword@localhost:5432/postgres
+    depends_on:
+      - postgres
+  wsbackend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.wsbackend
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data: {}
